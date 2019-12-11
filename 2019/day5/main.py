@@ -1,83 +1,88 @@
-import copy
+class Computer:
+    def __init__(self, codes):
+        self.index = -1
+        self.codes = codes
 
-def _get_args(codes, index, op_modes):
-    args = [None, None]
-    if op_modes[1] == 0:
-        args[0] = codes[codes[index+1]]
-    else:
-        args[0] = codes[index+1]
+    def at(self):
+        return self.codes[self.index]
 
-    if op_modes[2] == 0:
-        args[1] = codes[codes[index+2]]
-    else:
-        args[1] = codes[index+2]
+    def at_address(self):
+        return self.codes[self.at()]
 
-    return args
+    def put_at_address(self, value):
+        self.codes[self.at()] = value
 
-def _add(codes, index, op_modes):
-    #print(index, codes[index], codes[index+1], codes[index+2], codes[index+3])
-    args = _get_args(codes, index, op_modes)
+    def next(self):
+        self.index += 1
 
-    codes[codes[index+3]] = args[0] + args[1]
-    return 4
+    def next_n_args(self, n):
+        value = self.at()
+        args = []
+        digit = 100
+        for _ in range(n):
+            self.next()
+            if int(value / digit) % 10 == 0:
+                args.append(self.at_address())
+            else:
+                args.append(self.at())
+            digit = digit * 10
 
-def _mult(codes, index, op_modes):
-    #print(index, codes[index], codes[index+1], codes[index+2], codes[index+3])
-    args = _get_args(codes, index, op_modes)
+        return args
 
-    codes[codes[index+3]] = args[0] * args[1]
-    return 4
+    def instruction(self):
+        return self.at() % 100
 
-def _input(codes, index, op_modes):
-    value = input("Input: ")
-    output = codes[index+1]
-    codes[output] = int(value)
-    return 2
+    def add(self):
+        args = self.next_n_args(2)
+        result = args[0] + args[1]
+        self.next()
+        self.put_at_address(result)
 
-def _output(codes, index, op_modes):
-    output = codes[codes[index+1]]
-    print("Output:", output)
-    return 2
+    def mult(self):
+        args = self.next_n_args(2)
+        result = args[0] * args[1]
+        self.next()
+        self.put_at_address(result)
 
-def get_op_modes(op):
-    modes = [0,0,0,0]
-    modes[0] = op % 100
+    def input(self):
+        result = int(input("Input: "))
+        self.next()
+        self.put_at_address(result)
 
-    modes[1] = int(op / 100) % 10
-    modes[2] = int(op / 1000) % 10
-    modes[3] = int(op / 10000) % 10
-    return modes
+    def output(self):
+        self.next()
+        print("Output:", self.at_address())
 
-def compute(codes, index):
-    op_modes = get_op_modes(codes[index])
-    op = op_modes[0]
-    if op == 99:
-        return None
-    elif op == 1:
-        return _add(codes, index, op_modes)
-    elif op == 2:
-        return _mult(codes, index, op_modes)
-    elif op == 3:
-        return _input(codes, index, op_modes)
-    elif op == 4:
-        return _output(codes, index, op_modes)
-    else:
-        print("unknown op", op)
-        return None
+    def compute(self):
+        self.next()
+        instruction = self.instruction()
+        if instruction == 99:
+            return False
+
+        if instruction == 1:
+            self.add()
+        elif instruction == 2:
+            self.mult()
+        elif instruction == 3:
+            self.input()
+        elif instruction == 4:
+            self.output()
+        else:
+            print("unknown op", instruction)
+            return False
+
+        return True
 
 def run(codes):
-    index = 0
-    while True:
-        offset = compute(codes, index)
-        if offset is None:
-            break
-        index += offset
+    computer = Computer(codes)
+    execute = True
+    while execute:
+        execute = computer.compute()
 
 def part_two():
     with open("./input.txt") as input:
         original_codes = list(map(int, input.readline().split(",")))
         run(original_codes)
-
 
 if __name__ == "__main__":
     part_two()

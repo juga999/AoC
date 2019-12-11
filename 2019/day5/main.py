@@ -1,6 +1,6 @@
 class Computer:
     def __init__(self, codes):
-        self.index = -1
+        self.index = 0
         self.codes = codes
 
     def at(self):
@@ -29,32 +29,66 @@ class Computer:
 
         return args
 
+    def next_put_result(self, value):
+        self.next()
+        self.put_at_address(value)
+
     def instruction(self):
         return self.at() % 100
 
     def add(self):
         args = self.next_n_args(2)
         result = args[0] + args[1]
+        self.next_put_result(result)
         self.next()
-        self.put_at_address(result)
 
     def mult(self):
         args = self.next_n_args(2)
         result = args[0] * args[1]
+        self.next_put_result(result)
         self.next()
-        self.put_at_address(result)
+
+    def jump_if_true(self):
+        args = self.next_n_args(2)
+        if args[0] != 0:
+            self.index = args[1]
+        else:
+            self.next()
+
+    def jump_if_false(self):
+        args = self.next_n_args(2)
+        if args[0] == 0:
+            self.index = args[1]
+        else:
+            self.next()
+
+    def less_than(self):
+        args = self.next_n_args(2)
+        result = 0
+        if args[0] < args[1]:
+            result = 1
+        self.next_put_result(result)
+        self.next()
+
+    def equals(self):
+        args = self.next_n_args(2)
+        result = 0
+        if args[0] == args[1]:
+            result = 1
+        self.next_put_result(result)
+        self.next()
 
     def input(self):
         result = int(input("Input: "))
+        self.next_put_result(result)
         self.next()
-        self.put_at_address(result)
 
     def output(self):
         self.next()
         print("Output:", self.at_address())
+        self.next()
 
     def compute(self):
-        self.next()
         instruction = self.instruction()
         if instruction == 99:
             return False
@@ -67,6 +101,14 @@ class Computer:
             self.input()
         elif instruction == 4:
             self.output()
+        elif instruction == 5:
+            self.jump_if_true()
+        elif instruction == 6:
+            self.jump_if_false()
+        elif instruction == 7:
+            self.less_than()
+        elif instruction == 8:
+            self.equals()
         else:
             print("unknown op", instruction)
             return False

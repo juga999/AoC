@@ -1,35 +1,16 @@
-from collections import defaultdict
-from functools import reduce
+from dijkstar import Graph, find_path
 
-galaxy = defaultdict(set)
+galaxy = Graph(undirected=True)
 
-weights = {}
-
-def compute_weight(planet):
-    children = galaxy[planet]
-    if len(children) == 0:
-        return 0
-
-    weight = weights[planet]
-    for child in children:
-        weight += compute_weight(child)
-
-    weights[planet] = weight
-    return weight
-
-def sum_weights():
-    total = reduce(lambda a,b: a + b, weights.values())
-    return total
-
-def part_one():
+def part_two():
     with open("./input.txt") as input:
         for line in input.readlines():
             objs = line.strip().split(")")
-            galaxy[objs[0]].add(objs[1])
-            weights[objs[0]] = len(galaxy[objs[0]])
 
-        compute_weight('COM')
-        print(sum_weights())
+            galaxy.add_edge(objs[0], objs[1], 1)
+
+        path_info = find_path(galaxy, 'YOU', 'SAN')
+        print(path_info.total_cost - 2)
 
 if __name__ == "__main__":
-    part_one()
+    part_two()

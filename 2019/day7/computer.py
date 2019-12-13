@@ -1,7 +1,14 @@
 from collections import deque
 
 class Computer:
-    def __init__(self):
+
+    STATE_CONTINUE = 1
+    STATE_WAIT_INPUT = 2
+    STATE_YIELD_OUTPUT = 3
+    STATE_EXIT = 4
+
+    def __init__(self, name):
+        self.name = name
         self.inputs = deque([])
         self.last_output = None
         self.codes = None
@@ -83,33 +90,34 @@ class Computer:
         self.next()
 
     def input(self):
-        if len(self.inputs) > 0:
-            result = self.inputs.popleft()
-            print("Input:", result)
-        else:
-            result = int(input("Input: "))
+        result = self.inputs.popleft()
+        print("%s Input:" % self.name, result)
         self.next_put_result(result)
         self.next()
 
     def output(self):
         self.next()
         self.last_output = self.at_address()
-        print("Output:", self.last_output)
+        print("%s Output:" % self.name, self.last_output)
         self.next()
 
     def compute(self):
         instruction = self.instruction()
         if instruction == 99:
-            return False
+            return Computer.STATE_EXIT
 
         if instruction == 1:
             self.add()
         elif instruction == 2:
             self.mult()
         elif instruction == 3:
-            self.input()
+            if len(self.inputs) > 0:
+                self.input()
+            else:
+                return Computer.STATE_WAIT_INPUT
         elif instruction == 4:
             self.output()
+            return Computer.STATE_YIELD_OUTPUT
         elif instruction == 5:
             self.jump_if_true()
         elif instruction == 6:
@@ -119,17 +127,26 @@ class Computer:
         elif instruction == 8:
             self.equals()
         else:
-            print("unknown op", instruction)
-            return False
+            print("%s unknown op %s" % (self.name, instruction))
+            return Computer.STATE_EXIT
 
-        return True
+        return Computer.STATE_CONTINUE
 
     def set_inputs(self, values):
         self.inputs = deque(values)
 
     def run(self, codes):
-        self.index = 0
         self.codes = codes
-        execute = True
-        while execute:
-            execute = self.compute()
+        self.last_output = None
+        state = Computer.STATE_CONTINUE
+        while state is Computer.STATE_CONTINUE:
+            state = self.compute()
+            if state is Computer.STATE_WAIT_INPUT:
+                yield
+                state = Computer.STATE_CONTINUE
+            elif state is Computer.STATE_YIELD_OUTPUT:
+                yield self.last_output
+                self.last_output = None
+                state = Computer.STATE_CONTINUE
+        print("%s EXIT" % self.name)
+

@@ -21,12 +21,12 @@ def test3():
     while computer.state is not Computer.STATE_EXIT:
         next(runner)
 
-def part_one():
+def part_two():
     with open("./input.txt") as input:
         original_codes = list(map(int, input.readline().split(",")))
         computer = Computer("Comp 1")
         runner = computer.run(original_codes)
-        computer.set_inputs([1])
+        computer.set_inputs([2])
         try:
             while True:
                 next(runner)
@@ -35,5 +35,5 @@ def part_one():
             pass
 
 if __name__ == "__main__":
-    part_one()
+    part_two()
     #test1()

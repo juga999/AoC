@@ -139,7 +139,7 @@ class Computer:
         self.next()
 
     def input(self):
-        (args, output_addressing) = self.next_n_args(0)
+        (_, output_addressing) = self.next_n_args(0)
         result = self.inputs.popleft()
         print("%s Input:" % self.name, result)
         self.next_put_result(result, output_addressing)

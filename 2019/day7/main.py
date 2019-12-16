@@ -22,6 +22,7 @@ def run_with_phases(codes, phases):
             computers[4].set_inputs([output4])
             input_signal = next(amplifiers[4])
     except StopIteration:
+        print("DONE")
         pass
 
     return computers[4].last_output

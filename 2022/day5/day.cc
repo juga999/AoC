@@ -10,7 +10,6 @@ vector<vector<char>> supplies = {
 };
 */
 
-
 vector<vector<char>> supplies = {
     {'R', 'P', 'C', 'D', 'B', 'G'},
     {'H', 'V', 'G'},
@@ -22,7 +21,6 @@ vector<vector<char>> supplies = {
     {'C', 'M', 'D', 'B', 'F'},
     {'F', 'C', 'Q', 'G'}
 };
-
 
 void get_step(const string& entry, vector<int>& step)
 {
@@ -44,9 +42,7 @@ void part1()
         int src = step[1];
         int dest = step[2];
         while (q > 0) {
-            char crate = supplies[src].back();
-            supplies[src].pop_back();
-            supplies[dest].push_back(crate);
+            supplies[dest].push_back(aoc::remove_last(supplies[src]));
             q--;
         }
     }
@@ -69,9 +65,7 @@ void part2()
         int dest = step[2];
         vector<char> group;
         while (q > 0) {
-            char crate = supplies[src].back();
-            supplies[src].pop_back();
-            group.insert(group.begin(), crate);
+            group.insert(group.begin(), aoc::remove_last(supplies[src]));
             q--;
         }
         copy(group.begin(), group.end(), back_inserter(supplies[dest]));

@@ -10,6 +10,7 @@
 #include <set>
 #include <stack>
 #include <map>
+#include <tuple>
 
 namespace aoc {
 
@@ -38,6 +39,14 @@ void split(string const& str, const char delim,
     while (getline(ss, s, delim)) {
         out.push_back(s);
     }
+}
+
+template<typename T>
+T remove_last(vector<T>& values)
+{
+    T element = values.back();
+    values.pop_back();
+    return element;
 }
 
 }

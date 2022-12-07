@@ -1,0 +1,5 @@
+light red bags contain 1 bright white bag.
+bright white bags contain 4 shiny gold bags.
+shiny gold bags contain no bag.
+toto bags contain no bag.
+tata bags contain 2 toto bags.

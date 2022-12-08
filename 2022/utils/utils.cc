@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <deque>
+#include <list>
 #include <set>
 #include <stack>
 #include <map>

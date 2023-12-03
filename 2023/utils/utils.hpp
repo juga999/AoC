@@ -51,11 +51,39 @@ void split(const std::string& str, const char delim,
             std::vector<std::string>& out)
 {
     std::stringstream ss(str);
- 
+
     std::string s;
     while (std::getline(ss, s, delim)) {
         out.push_back(s);
     }
+}
+
+void split(const std::string& str, const char delim,
+            std::function<void(const std::string&, uint pos)> consumer)
+{
+    std::stringstream ss(str);
+
+    uint pos = 0;
+    std::string s;
+    while (std::getline(ss, s, delim)) {
+        consumer(s, pos);
+        ++pos;
+    }
+}
+
+expected<std::string,bool> nth(const std::string& str, const char delim, uint at)
+{
+    std::stringstream ss(str);
+
+    uint pos = 0;
+    std::string s;
+    while (std::getline(ss, s, delim)) {
+        if (pos == at) {
+            return s;
+        }
+        ++pos;
+    }
+    return unexpected(false);
 }
 
 template<typename T>

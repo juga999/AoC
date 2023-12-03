@@ -13,13 +13,11 @@ struct Game {
 reveal_t parse_reveal(const std::string& input)
 {
     reveal_t reveal = {{"red", 0}, {"green", 0}, {"blue", 0}};
-    str_vec_t items;
-    aoc::split(aoc::trim(input), ',', items);
-    for (auto item : items) {
+    aoc::split(aoc::trim(input), ',', [&](auto str, auto pos) {
         str_vec_t colors;
-        aoc::split(aoc::trim(item), ' ', colors);
+        aoc::split(aoc::trim(str), ' ', colors);
         reveal[aoc::trim(colors[1])] = *aoc::to_int(colors[0]);
-    }
+    });
     return reveal;
 }
 
@@ -39,23 +37,15 @@ Game init_game(const std::string& line)
 
     str_vec_t data;
     aoc::split(line, ':', data);
-    {
-        str_vec_t v1;
-        aoc::split(data[0], ' ', v1);
-        game.game_nb = *aoc::to_int(v1[1]);
-    }
-    {
-        str_vec_t v1;
-        aoc::split(data[1], ';', v1);
-        {
-            for (auto reveal_input : v1) {
-                auto reveal = parse_reveal(reveal_input);
-                game.max_red = std::max(game.max_red, reveal["red"]);
-                game.max_green = std::max(game.max_green, reveal["green"]);
-                game.max_blue = std::max(game.max_blue, reveal["blue"]);
-            }
-        }
-    }
+
+    game.game_nb = *aoc::nth(data[0], ' ', 1).and_then(aoc::to_int);
+
+    aoc::split(data[1], ';', [&](auto str, auto pos) {
+        auto reveal = parse_reveal(str);
+        game.max_red = std::max(game.max_red, reveal["red"]);
+        game.max_green = std::max(game.max_green, reveal["green"]);
+        game.max_blue = std::max(game.max_blue, reveal["blue"]);
+    });
     return game;
 }
 
@@ -72,8 +62,8 @@ int main()
         auto p = get_game_power(game);
         power += p;
     }
-    std::cout << "part 1: " << sum << std::endl;
-    std::cout << "part 2: " << power << std::endl;
+    std::cout << "part 1: " << sum << std::endl; // 2913
+    std::cout << "part 2: " << power << std::endl; // 55593
 
     return 0;
 }

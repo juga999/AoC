@@ -39,14 +39,23 @@ void print_collection(const T& v)
     std::cout << "]" << std::endl;
 }
 
-expected<int, bool> to_int(const std::string& input) {
-    int value = 0;
+template<typename T>
+expected<T, bool> to_number(const std::string& input) {
+    T value = 0;
     std::istringstream ss(input);
     ss >> value;
     if (ss.fail()) {
         return unexpected(false);
     }
     return value;
+}
+
+expected<int, bool> to_int(const std::string& input) {
+    return to_number<int>(input);
+}
+
+expected<uint, bool> to_uint(const std::string& input) {
+    return to_number<uint>(input);
 }
 
 void split(const std::string& str, const char delim,
@@ -88,14 +97,6 @@ expected<std::string,bool> nth(const std::string& str, const char delim, uint at
     return unexpected(false);
 }
 
-template<typename T>
-T remove_last(std::vector<T>& values)
-{
-    T element = values.back();
-    values.pop_back();
-    return element;
-}
-
 std::string ltrim(const std::string& s)
 {
     size_t start = s.find_first_not_of(WHITESPACE);
@@ -111,6 +112,33 @@ std::string rtrim(const std::string& s)
 std::string trim(const std::string& s)
 {
     return rtrim(ltrim(s));
+}
+
+const std::regex labelled_value_regex("(\\w+)");
+
+expected<std::tuple<std::string, uint>, bool> labelled_uint(const std::string& str)
+{
+    auto match_begin = std::sregex_iterator(
+        str.begin(), str.end(), labelled_value_regex);
+    auto match_end = std::sregex_iterator();
+    if (std::distance(match_begin, match_end) == 2) {
+        std::sregex_iterator i = match_begin;
+        std::string label = (*i).str();
+        ++i;
+        std::string number = (*i).str();
+        return aoc::to_uint(aoc::trim(number))
+            .map([&](auto n) { return std::make_tuple(label, n); });
+    }  else {
+        return unexpected(false);
+    }
+}
+
+template<typename T>
+T remove_last(std::vector<T>& values)
+{
+    T element = values.back();
+    values.pop_back();
+    return element;
 }
 
 }

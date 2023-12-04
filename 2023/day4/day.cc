@@ -18,11 +18,8 @@ Card init_card(const std::string& line)
     str_vec_t data;
     aoc::split(line, ':', data);
 
-    aoc::split(aoc::trim(data[0]), ' ', [&](auto str, auto pos) {
-        aoc::to_int(aoc::trim(str)).map([&card](auto value) {
-            card.id = value;
-        });
-    });
+    auto [label, id] = *aoc::labelled_uint(data[0]);
+    card.id = id;
 
     str_vec_t numbers_data;
     aoc::split(data[1], '|', numbers_data);

@@ -7,7 +7,7 @@ struct Card {
     std::set<uint> numbers;
     std::set<uint> winning_numbers;
     std::vector<uint> matching_numbers;
-    std::vector<uint> next_matching_ids;
+    uint next_matching_ids;
     uint score;
 };
 
@@ -47,12 +47,10 @@ Card init_card(const std::string& line)
         for (size_t i = 1; i < card.matching_numbers.size(); i++) {
             card.score *= 2;
         }
-        for (size_t i = 0; i < card.matching_numbers.size(); i++) {
-            card.next_matching_ids.push_back(card.id + i + 1);
-        }
     } else {
         card.score = 0;
     }
+    card.next_matching_ids = card.matching_numbers.size();
 
     return card;
 }
@@ -72,16 +70,6 @@ void part1()
     std::cout << total << std::endl;
 }
 
-void add_card_ids(const std::vector<Card>& cards, uint id, std::vector<uint>& matching_ids)
-{
-    const Card& card = cards[id-1];
-    matching_ids.insert(matching_ids.end(), card.next_matching_ids.begin(), card.next_matching_ids.end());
-    for (uint next_id : card.next_matching_ids) {
-        add_card_ids(cards, next_id, matching_ids);
-
-    }
-}
-
 void part2()
 {
     std::vector<Card> cards;
@@ -91,15 +79,19 @@ void part2()
         cards.push_back(card);
     }
 
-    std::vector<uint> matching_ids;
+    std::map<uint, uint> matching_map;
     for (const Card& card : cards) {
-        matching_ids.push_back(card.id);
-        if (card.next_matching_ids.size() > 0) {
-            add_card_ids(cards, card.id, matching_ids);
+        matching_map[card.id] += 1;
+        for (uint j = 0; j < card.next_matching_ids; j++) {
+            // had to look it up :/
+            matching_map[card.id + j + 1] += matching_map[card.id];
         }
     }
-
-    std::cout << matching_ids.size() << std::endl;
+    uint sum = 0;
+    for (auto [id, count] : matching_map) {
+        sum += count;
+    }
+    std::cout << sum << std::endl;
 }
 
 int main()

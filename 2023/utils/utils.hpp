@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <numeric>
 #include <functional>
+#include <optional>
+#include <ranges>
 #include <iterator>
 #include <string>
 #include <sstream>

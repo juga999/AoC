@@ -38,7 +38,8 @@ Game init_game(const std::string& line)
     str_vec_t data;
     aoc::split(line, ':', data);
 
-    game.game_nb = *aoc::nth(data[0], ' ', 1).and_then(aoc::to_int);
+    auto [label, nb] = *aoc::labelled_uint(data[0]);
+    game.game_nb = nb;
 
     aoc::split(data[1], ';', [&](auto str, auto pos) {
         auto reveal = parse_reveal(str);

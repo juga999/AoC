@@ -82,21 +82,6 @@ void split(const std::string& str, const char delim,
     }
 }
 
-expected<std::string,bool> nth(const std::string& str, const char delim, uint at)
-{
-    std::stringstream ss(str);
-
-    uint pos = 0;
-    std::string s;
-    while (std::getline(ss, s, delim)) {
-        if (pos == at) {
-            return s;
-        }
-        ++pos;
-    }
-    return unexpected(false);
-}
-
 std::string ltrim(const std::string& s)
 {
     size_t start = s.find_first_not_of(WHITESPACE);

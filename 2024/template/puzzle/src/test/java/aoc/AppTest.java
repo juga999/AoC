@@ -7,6 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
 class CalculatorTests {
 
     @Test
@@ -27,5 +34,15 @@ class CalculatorTests {
         Calculator calculator = new Calculator();
         assertEquals(expectedResult, calculator.add(first, second),
                 () -> first + " + " + second + " should equal " + expectedResult);
+    }
+
+    @Test
+    void loadsFile() {
+        Path filePath = Paths.get("src", "test", "resources", "test_file.txt");
+        try (Stream<String> lines = Files.lines(filePath, Charset.defaultCharset())) {
+            lines.forEachOrdered(System.out::println);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

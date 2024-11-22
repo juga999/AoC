@@ -19,6 +19,9 @@
 #include <tuple>
 #include <regex>
 
+namespace r = std::ranges;
+namespace rv = std::ranges::views;
+
 // https://github.com/TartanLlama/expected
 #include "expected.hpp"
 
@@ -99,6 +102,11 @@ std::string trim(const std::string& s)
     return rtrim(ltrim(s));
 }
 
+bool starts_with(const std::string& str, const std::string& start)
+{
+    return str.rfind(start, 0) == 0;
+}
+
 const std::regex labelled_value_regex("(\\w+)");
 
 expected<std::tuple<std::string, uint>, bool> labelled_uint(const std::string& str)
@@ -116,6 +124,26 @@ expected<std::tuple<std::string, uint>, bool> labelled_uint(const std::string& s
     }  else {
         return unexpected(false);
     }
+}
+
+const std::regex uint_regex(R"(\d+)");
+
+expected<std::vector<uint>, bool> to_uints(const std::string& str)
+{
+    std::vector<uint> numbers;
+    auto match_begin = std::sregex_iterator(
+        str.begin(), str.end(), labelled_value_regex);
+    auto match_end = std::sregex_iterator();
+    for (auto i = match_begin; i != match_end; ++i) {
+        auto value = (*i).str();
+        auto expected_number = aoc::to_uint((*i).str());
+        if (expected_number.has_value()) {
+            numbers.push_back(*expected_number);
+        } else {
+            return unexpected(false);
+        }
+    }
+    return numbers;
 }
 
 template<typename T>

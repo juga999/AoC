@@ -24,26 +24,17 @@ Card init_card(const std::string& line)
     str_vec_t numbers_data;
     aoc::split(data[1], '|', numbers_data);
 
-    aoc::split(aoc::trim(numbers_data[0]), ' ', [&](auto str, auto pos) {
-        aoc::to_int(aoc::trim(str)).map([&card](auto value) {
-            card.numbers.insert(value);
-        });
-    });
-    aoc::split(aoc::trim(numbers_data[1]), ' ', [&](auto str, auto pos) {
-        aoc::to_int(aoc::trim(str)).map([&card](auto value) {
-            card.winning_numbers.insert(value);
-        });
-    });
+    aoc::to_uints(numbers_data[0])
+        .map([&](auto&& v) { card.numbers = {v.begin(), v.end()}; });
+    aoc::to_uints(numbers_data[1])
+        .map([&](auto&& v) { card.winning_numbers = {v.begin(), v.end()}; });
 
     std::set_intersection(
         card.numbers.begin(), card.numbers.end(),
         card.winning_numbers.begin(), card.winning_numbers.end(),
         std::back_inserter(card.matching_numbers));
     if (card.matching_numbers.size() > 0) {
-        card.score = 1;
-        for (size_t i = 1; i < card.matching_numbers.size(); i++) {
-            card.score *= 2;
-        }
+        card.score = 1 << (card.matching_numbers.size() - 1);
     } else {
         card.score = 0;
     }
@@ -52,10 +43,10 @@ Card init_card(const std::string& line)
     return card;
 }
 
-void part1()
+int main()
 {
     std::vector<Card> cards;
-    std::ifstream f{"input_test.txt"};
+    std::ifstream f{"input.txt"};
     for (std::string line; std::getline(f, line); ) {
         Card card = init_card(line);
         cards.push_back(card);
@@ -64,17 +55,7 @@ void part1()
     for (auto card : cards) {
         total += card.score;
     }
-    std::cout << total << std::endl;
-}
-
-void part2()
-{
-    std::vector<Card> cards;
-    std::ifstream f{"input.txt"};
-    for (std::string line; std::getline(f, line); ) {
-        Card card = init_card(line);
-        cards.push_back(card);
-    }
+    std::cout << "part 1: " << total << std::endl; // 20117
 
     std::map<uint, uint> matching_map;
     for (const Card& card : cards) {
@@ -84,16 +65,9 @@ void part2()
             matching_map[card.id + j + 1] += matching_map[card.id];
         }
     }
-    uint sum = 0;
-    for (auto [id, count] : matching_map) {
-        sum += count;
-    }
-    std::cout << sum << std::endl;
-}
-
-int main()
-{
-    part2(); // 13768818
+    auto values = matching_map | rv::values;
+    uint sum = std::accumulate(values.begin(), values.end(), 0);
+    std::cout << "part 2: " << sum << std::endl; // 13768818
 
     return 0;
 }

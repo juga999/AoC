@@ -1,4 +1,4 @@
-package aoc.day0;
+package aoc.twentythree.day1;
 
 import aoc.Day;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Day0 {
+public class Day1 {
 
     protected Integer extractNumber(String str) {
         if (str.startsWith("one")) {
@@ -34,7 +34,7 @@ public class Day0 {
 
     public Integer run(String dataPath) {
         List<Integer> digits = new ArrayList<>();
-        List<String> lines = Day.getInputDataLines("day0", dataPath);
+        List<String> lines = Day.getInputDataLines("2023", "day1", dataPath);
         for (String l : lines) {
             List<Integer> numbers = new ArrayList<>();
             int pos = 0;

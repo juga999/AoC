@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 public class Day {
 
-    public static Path getInputDataPath(String day, String name) {
-        return Paths.get("src", "test", "resources", day, name);
+    public static Path getInputDataPath(String year, String day, String name) {
+        return Paths.get("src", "test", "resources", year, day, name);
     }
 
-    public static List<String> getInputDataLines(String day, String name) {
-        Path filePath = Day.getInputDataPath(day, name);
+    public static List<String> getInputDataLines(String year, String day, String name) {
+        Path filePath = Day.getInputDataPath(year, day, name);
         try {
             return Files.readAllLines(filePath);
         } catch (IOException e) {

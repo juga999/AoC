@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class Day {
 
@@ -22,8 +23,9 @@ public class Day {
         }
     }
 
-    public static <T> void print(List<T> list) {
-        String str = list.stream().map(Object::toString).collect(Collectors.joining(","));
+    public static <T> void print(Iterable<T> list) {
+        String str = StreamSupport.stream(list.spliterator(), false)
+                .map(Object::toString).collect(Collectors.joining(","));
         System.out.println(str);
     }
 

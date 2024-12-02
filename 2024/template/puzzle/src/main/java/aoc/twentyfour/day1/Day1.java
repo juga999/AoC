@@ -14,7 +14,7 @@ public class Day1 {
     public Long run1(String dataPath) {
         List<Long> leftList = new ArrayList<>();
         List<Long> rightList = new ArrayList<>();
-        List<String> lines = Day.getInputDataLines("2024", "day1", dataPath);
+        List<String> lines = Day.getInputDataLines("2024", getClass().getSimpleName().toLowerCase(), dataPath);
         for (String l : lines) {
             String[] values = l.split("   ");
             leftList.add(Long.parseLong(values[0]));
@@ -32,7 +32,7 @@ public class Day1 {
     public Long run2(String dataPath) {
         List<Long> leftList = new ArrayList<>();
         List<Long> rightList = new ArrayList<>();
-        List<String> lines = Day.getInputDataLines("2024", "day1", dataPath);
+        List<String> lines = Day.getInputDataLines("2024", getClass(), dataPath);
         for (String l : lines) {
             String[] values = l.split("   ");
             leftList.add(Long.parseLong(values[0]));

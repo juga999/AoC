@@ -23,6 +23,10 @@ public class Day {
         }
     }
 
+    public static List<String> getInputDataLines(String year, Class<?> day, String name) {
+        return getInputDataLines(year, day.getSimpleName().toLowerCase(), name);
+    }
+
     public static <T> void print(Iterable<T> list) {
         String str = StreamSupport.stream(list.spliterator(), false)
                 .map(Object::toString).collect(Collectors.joining(","));

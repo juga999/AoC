@@ -4,6 +4,7 @@ import aoc.Day;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Day2 {
 
@@ -29,11 +30,7 @@ public class Day2 {
         }
         long incCount = deltas.stream().filter(d -> d > 0).count();
         long decCount = deltas.stream().filter(d -> d < 0).count();
-        if (incCount > 0 && decCount > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !deltas.isEmpty() && (incCount <= 0 || decCount <= 0);
     }
 
     public boolean isSafeWithOneBad(String[] values) {
@@ -48,27 +45,20 @@ public class Day2 {
         return false;
     }
 
+    Stream<String[]> getInputStream(String dataPath) {
+        return Day.getInputDataStream("2024", getClass(), dataPath)
+                .map(l -> l.split(" "));
+    }
+
     public Long run1(String dataPath) {
-        List<String> lines = Day.getInputDataLines("2024", getClass(), dataPath);
-        long count = 0L;
-        for (String l : lines) {
-            String[] values = l.split(" ");
-            if (isSafe(values)) {
-                ++count;
-            }
-        }
-        return count;
+        return getInputStream(dataPath)
+                .filter(this::isSafe)
+                .count();
     }
 
     public Long run2(String dataPath) {
-        List<String> lines = Day.getInputDataLines("2024", getClass(), dataPath);
-        long count = 0L;
-        for (String l : lines) {
-            String[] values = l.split(" ");
-            if (isSafeWithOneBad(values)) {
-                ++count;
-            }
-        }
-        return count;
+        return getInputStream(dataPath)
+                .filter(this::isSafeWithOneBad)
+                .count();
     }
 }

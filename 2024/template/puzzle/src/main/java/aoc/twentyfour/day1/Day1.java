@@ -8,45 +8,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Day1 {
+
+    Stream<String[]> getInputStream(String dataPath) {
+        return Day.getInputDataStream("2024", getClass(), dataPath)
+                .map(l -> l.split("   "));
+    }
 
     public Long run1(String dataPath) {
         List<Long> leftList = new ArrayList<>();
         List<Long> rightList = new ArrayList<>();
-        List<String> lines = Day.getInputDataLines("2024", getClass().getSimpleName().toLowerCase(), dataPath);
-        for (String l : lines) {
-            String[] values = l.split("   ");
+        getInputStream(dataPath).forEach(values -> {
             leftList.add(Long.parseLong(values[0]));
             rightList.add(Long.parseLong(values[1]));
-        }
+        });
         Collections.sort(leftList);
         Collections.sort(rightList);
-        long sum = 0L;
-        for (int i = 0; i < lines.size(); i++) {
-            sum += Math.abs(leftList.get(i) - rightList.get(i));
-        }
-        return sum;
+        return IntStream.range(0, leftList.size())
+                .mapToLong(i -> Math.abs(leftList.get(i) - rightList.get(i)))
+                .sum();
     }
 
     public Long run2(String dataPath) {
         List<Long> leftList = new ArrayList<>();
         List<Long> rightList = new ArrayList<>();
-        List<String> lines = Day.getInputDataLines("2024", getClass(), dataPath);
-        for (String l : lines) {
-            String[] values = l.split("   ");
+        getInputStream(dataPath).forEach(values -> {
             leftList.add(Long.parseLong(values[0]));
             rightList.add(Long.parseLong(values[1]));
-        }
-        long similariyScore = 0L;
+        });
         Map<Long, Long> rightMap = rightList.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        for (Long number : leftList) {
-            if (rightMap.containsKey(number)) {
-                long score = number * rightMap.get(number);
-                similariyScore += score;
-            }
-        }
-        return similariyScore;
+        return leftList.stream()
+                .filter(rightMap::containsKey)
+                .mapToLong(n -> n * rightMap.get(n))
+                .sum();
     }
 }

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Day {
@@ -23,8 +24,21 @@ public class Day {
         }
     }
 
+    public static Stream<String> getInputDataStream(String year, String day, String name) {
+        Path filePath = Day.getInputDataPath(year, day, name);
+        try {
+            return Files.lines(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static List<String> getInputDataLines(String year, Class<?> day, String name) {
         return getInputDataLines(year, day.getSimpleName().toLowerCase(), name);
+    }
+
+    public static Stream<String> getInputDataStream(String year, Class<?> day, String name) {
+        return getInputDataStream(year, day.getSimpleName().toLowerCase(), name);
     }
 
     public static <T> void print(Iterable<T> list) {

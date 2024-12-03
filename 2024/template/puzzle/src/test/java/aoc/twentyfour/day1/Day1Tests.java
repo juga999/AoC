@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Day1Tests {
 
     @Test
-    void testsDay1Part1() {
+    void testsPart1() {
         {
             Day1 day1 = new Day1();
             Long result = day1.run1("input.txt");
@@ -16,7 +16,7 @@ public class Day1Tests {
     }
 
     @Test
-    void testsDay1Part2() {
+    void testsPart2() {
         {
             Day1 day1 = new Day1();
             Long result = day1.run2("input.txt");

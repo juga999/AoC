@@ -2,6 +2,7 @@ package aoc.twentyfour.day4;
 
 import aoc.CharMatrix2D;
 import aoc.Day;
+import aoc.Matrix2D;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Day4 {
 
     CharMatrix2D matrix;
 
-    public long getWordCountPart1(CharMatrix2D.Location loc) {
+    public long getWordCountPart1(Matrix2D.Location loc) {
         if (matrix.charAt(loc) != 'X') {
             return 0;
         }
@@ -23,7 +24,7 @@ public class Day4 {
                 .count();
     }
 
-    public boolean hasXMas(CharMatrix2D.Location loc) {
+    public boolean hasXMas(Matrix2D.Location loc) {
         return hasXMas(loc.r(), loc.c());
     }
 

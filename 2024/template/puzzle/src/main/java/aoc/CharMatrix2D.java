@@ -2,26 +2,14 @@ package aoc;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public class CharMatrix2D {
-
-    public record Location (int r, int c) {}
-
-    protected final int width;
-    protected final int height;
-    protected final char[][] data;
+public class CharMatrix2D extends Matrix2D<Character> {
 
     public CharMatrix2D(List<String> lines) {
-        width = lines.getFirst().length();
-        height = lines.size();
-        data = new char[height][width];
-        for (int r = 0; r < height; r++) {
-            for (int c = 0; c < width; c++) {
-                data[r][c] = lines.get(r).charAt(c);
-            }
-        }
+        super(Character.class, lines.getFirst().length(), lines.size());
+        locations().forEach(l -> {
+            put(lines.get(l.r()).charAt(l.c()), l);
+        });
     }
 
     static char[] getCharArray(int size) {
@@ -30,43 +18,16 @@ public class CharMatrix2D {
         return array;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (int r = 0; r < height; r++) {
-            for (int c = 0; c < width; c++) {
-                builder.append(data[r][c]).append(' ');
-            }
-            builder.append('\n');
-        }
-        return builder.toString();
-    }
-
-    public char charAt(Location loc) {
+    public Character charAt(Location loc) {
         return charAt(loc.r(), loc.c());
     }
 
-    public char charAt(int r, int c) {
+    public Character charAt(int r, int c) {
         if (r >= 0 && r < height && c >= 0 && c < width) {
-            return data[r][c];
+            return get(r, c);
         } else {
             return '\0';
         }
-    }
-
-    public Stream<Location> locations() {
-        return IntStream.range(0, height)
-                .boxed()
-                .flatMap(row -> IntStream.range(0, width)
-                        .mapToObj(col -> new Location(row, col)));
     }
 
     public List<char[]> getInRadius(Location loc, int radius) {

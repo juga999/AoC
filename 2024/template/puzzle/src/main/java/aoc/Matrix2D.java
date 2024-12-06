@@ -1,11 +1,35 @@
 package aoc;
 
+import lombok.Getter;
+
 import java.lang.reflect.Array;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public abstract class Matrix2D<T> {
+
     public record Location (int r, int c) {}
+
+    @Getter
+    public enum Direction {
+        LEFT(-1, 0),
+        RIGHT(1, 0),
+        UP(0, -1),
+        DOWN(0, 1),
+        UP_RIGHT(1, -1),
+        UP_LEFT(-1, -1),
+        DOWN_RIGHT(1, 1),
+        DOWN_LEFT(-1, 1);
+
+        Direction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+
+        private final int dx;
+        private final int dy;
+    }
 
     protected final int width;
     protected final int height;
@@ -55,5 +79,12 @@ public abstract class Matrix2D<T> {
                 .boxed()
                 .flatMap(row -> IntStream.range(0, width)
                         .mapToObj(col -> new Location(row, col)));
+    }
+
+    public Location findFirst(T item) {
+        return locations()
+                .filter(l -> Objects.equals(get(l), item))
+                .findFirst()
+                .orElse(null);
     }
 }

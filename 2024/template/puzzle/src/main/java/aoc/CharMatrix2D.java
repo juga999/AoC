@@ -1,7 +1,9 @@
 package aoc;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CharMatrix2D extends Matrix2D<Character> {
 
@@ -31,33 +33,19 @@ public class CharMatrix2D extends Matrix2D<Character> {
     }
 
     public List<char[]> getInRadius(Location loc, int radius) {
-        return getInRadius(loc.r(), loc.c(), radius);
-    }
-
-    public List<char[]> getInRadius(int r, int c, int radius) {
-        char[] lettersUR = getCharArray(radius);
-        char[] lettersR = getCharArray(radius);
-        char[] lettersDR = getCharArray(radius);
-        char[] lettersUL = getCharArray(radius);
-        char[] lettersL = getCharArray(radius);
-        char[] lettersDL = getCharArray(radius);
-        char[] lettersD = getCharArray(radius);
-        char[] lettersU = getCharArray(radius);
-
-        for (int i = 0; i < radius; i++) {
-            lettersR[i] = charAt(r, c + i);
-            lettersUR[i] = charAt(r - i, c + i);
-            lettersDR[i] = charAt(r + i, c + i);
-            lettersL[i] = charAt(r, c - i);
-            lettersUL[i] = charAt(r - i, c - i);
-            lettersDL[i] = charAt(r + i, c - i);
-            lettersD[i] = charAt(r + i, c);
-            lettersU[i] = charAt(r - i, c);
+        int r = loc.r();
+        int c = loc.c();
+        Map<Direction, char[]> charsMap = new HashMap<>();
+        for (Direction dir : Direction.values()) {
+            charsMap.put(dir, getCharArray(radius));
         }
 
-        return List.of(
-                lettersUR, lettersR, lettersDR,
-                lettersUL, lettersL, lettersDL,
-                lettersD, lettersU);
+        for (int i = 0; i < radius; i++) {
+            for (Direction dir : Direction.values()) {
+                charsMap.get(dir)[i] = charAt(r + (i * dir.getDy()), c + (i * dir.getDx()));
+            }
+        }
+
+        return charsMap.values().stream().toList();
     }
 }

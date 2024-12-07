@@ -1,6 +1,5 @@
 package aoc.twentyfour.day6;
 
-import aoc.Matrix2D;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

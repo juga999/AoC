@@ -19,30 +19,60 @@ public class Day7 {
         private List<Long> sequence;
         private List<Character> operators = new ArrayList<>();
 
-        public static Long concat(Long num1, Long num2) {
-            return Long.parseLong("%d%d".formatted(num1, num2));
-        }
-
         public Equation(String str) {
             String[] data = str.split(":");
             expectedResult = Long.parseLong(data[0].trim());
             sequence = Arrays.stream(data[1].trim().split(" ")).map(Long::parseLong).toList();
         }
 
-        void nextStep(Long tmpResult, int depth, Set<Long> results) {
-            if (depth <= 0) {
+        void nextStepTwoOperands(Long tmpResult, int depth, Set<Long> results) {
+            if (depth == 0) {
                 results.add(tmpResult);
                 return;
             }
             long number = sequence.get(depth);
             {
                 long addRes = tmpResult - number;
-                nextStep(addRes, depth - 1, results);
+                nextStepTwoOperands(addRes, depth - 1, results);
             }
             if (tmpResult % number == 0) {
                 long multRes = tmpResult / number;
-                nextStep(multRes, depth - 1, results);
+                nextStepTwoOperands(multRes, depth - 1, results);
             }
+        }
+
+        public Long deConcat(long from, long number) {
+            String fromStr = "%d".formatted(from);
+            String numberStr = "%d".formatted(number);
+            if (fromStr.length() > numberStr.length() && fromStr.endsWith(numberStr)) {
+                return Long.parseLong(fromStr.substring(0, fromStr.length() - numberStr.length()));
+            } else {
+                return null;
+            }
+        }
+
+        void nextStepThreeOperands(Long tmpResult, int depth, Set<Long> results) {
+            if (tmpResult <= 0) {
+                return;
+            }
+            if (depth == 0) {
+                results.add(tmpResult);
+                return;
+            }
+            long number = sequence.get(depth);
+            {
+                long addRes = tmpResult - number;
+                nextStepThreeOperands(addRes, depth - 1, results);
+            }
+            if (tmpResult % number == 0) {
+                long multRes = tmpResult / number;
+                nextStepThreeOperands(multRes, depth - 1, results);
+            }
+            Long deConcatRes = deConcat(tmpResult, number);
+            if (deConcatRes != null) {
+                nextStepThreeOperands(deConcatRes, depth - 1, results);
+            }
+
         }
 
         public boolean isValidTwoOperands() {
@@ -51,13 +81,13 @@ public class Day7 {
 
         public boolean isValidTwoOperands(List<Long> seq) {
             Set<Long> results = new HashSet<>();
-            nextStep(expectedResult, seq.size() - 1, results);
+            nextStepTwoOperands(expectedResult, seq.size() - 1, results);
             return results.contains(seq.getFirst());
         }
 
         public boolean isValidThreeOperands() {
             Set<Long> results = new HashSet<>();
-            nextStep(expectedResult, sequence.size() - 1, results);
+            nextStepThreeOperands(expectedResult, sequence.size() - 1, results);
             return results.contains(sequence.getFirst());
         }
     }

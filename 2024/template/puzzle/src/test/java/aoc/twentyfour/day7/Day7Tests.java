@@ -31,11 +31,13 @@ public class Day7Tests {
     @Test
     void testsPart2() {
         {
-            Day7.Equation e = new Day7.Equation("7290: 6 8 6 15");
+            Day7.Equation e = new Day7.Equation("156: 15 6");
             Assertions.assertTrue(e.isValidThreeOperands());
         }
-        /*{
-            Day7.Equation e = new Day7.Equation("156: 15 6");
+        {
+            Day7.Equation e = new Day7.Equation("7290: 6 8 6 15");
+            Long n = e.deConcat(486, 6);
+            Assertions.assertEquals(48L, n);
             Assertions.assertTrue(e.isValidThreeOperands());
         }
         {
@@ -63,6 +65,11 @@ public class Day7Tests {
             Day7 day7 = new Day7();
             long result = day7.run2("input_simple.txt");
             Assertions.assertEquals(11387, result);
-        }*/
+        }
+        {
+            Day7 day7 = new Day7();
+            long result = day7.run2("input.txt");
+            Assertions.assertEquals(248427118972289L, result);
+        }
     }
 }

@@ -18,7 +18,7 @@ public class Day4 {
         if (matrix.charAt(loc) != 'X') {
             return 0;
         }
-        return matrix.getInRadius(loc, XMAS.length()).stream()
+        return matrix.getWithinRadius(loc, XMAS.length()).stream()
                 .map(String::copyValueOf)
                 .filter(XMAS::equals)
                 .count();

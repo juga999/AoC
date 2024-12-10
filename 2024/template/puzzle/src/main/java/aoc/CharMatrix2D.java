@@ -2,8 +2,11 @@ package aoc;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class CharMatrix2D extends Matrix2D<Character> {
 
@@ -20,6 +23,13 @@ public class CharMatrix2D extends Matrix2D<Character> {
         return array;
     }
 
+    public boolean isValidLocation(Location loc) {
+        if (loc == null) {
+            return false;
+        }
+        return (loc.r() >= 0 && loc.r() < height && loc.c() >= 0 && loc.c() < width);
+    }
+
     public Character charAt(Location loc) {
         return charAt(loc.r(), loc.c());
     }
@@ -32,9 +42,9 @@ public class CharMatrix2D extends Matrix2D<Character> {
         }
     }
 
-    public List<char[]> getInRadius(Location loc, int radius) {
-        int r = loc.r();
-        int c = loc.c();
+    public List<char[]> getWithinRadius(Location centerLoc, int radius) {
+        int r = centerLoc.r();
+        int c = centerLoc.c();
         Map<Direction, char[]> charsMap = new HashMap<>();
         for (Direction dir : Direction.values()) {
             charsMap.put(dir, getCharArray(radius));
@@ -48,4 +58,5 @@ public class CharMatrix2D extends Matrix2D<Character> {
 
         return charsMap.values().stream().toList();
     }
+
 }

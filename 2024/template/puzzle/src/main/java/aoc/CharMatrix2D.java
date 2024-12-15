@@ -2,11 +2,8 @@ package aoc;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
 
 public class CharMatrix2D extends Matrix2D<Character> {
 
@@ -40,6 +37,10 @@ public class CharMatrix2D extends Matrix2D<Character> {
         } else {
             return '\0';
         }
+    }
+
+    public Location getNeighborLocation(Location loc, Direction dir) {
+        return new Location(loc.r() + dir.getDy(), loc.c() + dir.getDx());
     }
 
     public List<char[]> getWithinRadius(Location centerLoc, int radius) {

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.lang.reflect.Array;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -30,6 +31,10 @@ public abstract class Matrix2D<T> {
         private final int dx;
         private final int dy;
     }
+
+    public static final Set<Direction> L_R_U_D_DIRS = Set.of(
+            Matrix2D.Direction.LEFT, Matrix2D.Direction.RIGHT,
+            Matrix2D.Direction.UP, Matrix2D.Direction.DOWN);
 
     protected final int width;
     protected final int height;
@@ -72,6 +77,10 @@ public abstract class Matrix2D<T> {
 
     public void fill(T value) {
         locations().forEach(l -> put(value, l));
+    }
+
+    public void fill(T value, Iterable<Location> locations) {
+        locations.forEach(l -> put(value, l));
     }
 
     public Stream<Location> locations() {

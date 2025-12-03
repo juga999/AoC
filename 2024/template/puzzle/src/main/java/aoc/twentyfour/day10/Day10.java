@@ -19,10 +19,6 @@ import java.util.Set;
 @Getter
 public class Day10 {
 
-    private static final Set<Matrix2D.Direction> L_R_U_D_DIRS = Set.of(
-            Matrix2D.Direction.LEFT, Matrix2D.Direction.RIGHT,
-            Matrix2D.Direction.UP, Matrix2D.Direction.DOWN);
-
     CharMatrix2D matrix;
     Set<Matrix2D.Location> startingLocations = new HashSet<>();
     Set<Matrix2D.Location> endingLocations = new HashSet<>();
@@ -65,7 +61,7 @@ public class Day10 {
 
     public void buildPath(Graph<Matrix2D.Location, DefaultEdge> path, Matrix2D.Location startLoc, Matrix2D.Location loc) {
         Integer value = getAt(loc);
-        for (Matrix2D.Direction dir : L_R_U_D_DIRS) {
+        for (Matrix2D.Direction dir : Matrix2D.L_R_U_D_DIRS) {
             Matrix2D.Location nextLoc = matrix.getNeighborLocation(loc, dir);
             Integer nextValue = getAt(nextLoc);
             if (nextValue != null && nextValue - value == 1) {

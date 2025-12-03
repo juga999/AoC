@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class CharMatrix2D extends Matrix2D<Character> {
 
+    public CharMatrix2D(int width, int height) {
+        super(Character.class, width, height);
+    }
+
     public CharMatrix2D(List<String> lines) {
         super(Character.class, lines.getFirst().length(), lines.size());
         locations().forEach(l -> {

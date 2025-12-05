@@ -5,6 +5,7 @@ import lombok.Getter;
 import java.lang.reflect.Array;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -88,6 +89,14 @@ public abstract class Matrix2D<T> {
                 .boxed()
                 .flatMap(row -> IntStream.range(0, width)
                         .mapToObj(col -> new Location(row, col)));
+    }
+
+    public Stream<Location> locations(Predicate<T> predicate) {
+        return IntStream.range(0, height)
+                .boxed()
+                .flatMap(row -> IntStream.range(0, width)
+                        .mapToObj(col -> new Location(row, col)))
+                .filter(l -> predicate.test(get(l)));
     }
 
     public Location findFirst(T item) {

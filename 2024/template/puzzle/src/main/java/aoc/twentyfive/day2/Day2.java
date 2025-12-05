@@ -1,23 +1,13 @@
 package aoc.twentyfive.day2;
 
 import aoc.Day;
+import aoc.Range;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Day2 {
-
-    static final class Range {
-        long start;
-        long end;
-
-        Range(String str) {
-            String[] values = str.split("-");
-            this.start = Long.parseLong(values[0]);
-            this.end = Long.parseLong(values[1]);
-        }
-    }
 
     static boolean isInvalidId(long id) {
         String str = Long.toString(id);
@@ -76,7 +66,7 @@ public class Day2 {
         long result = 0;
         List<Range> ranges = getInput(dataPath);
         for (Range range : ranges) {
-            result += getInvalidIds(range.start, range.end).stream().
+            result += getInvalidIds(range.getStart(), range.getEnd()).stream().
                     mapToLong(Long::longValue)
                     .sum();
         }
@@ -87,7 +77,7 @@ public class Day2 {
         long result = 0;
         List<Range> ranges = getInput(dataPath);
         for (Range range : ranges) {
-            result += getComplexInvalidIds(range.start, range.end).stream().
+            result += getComplexInvalidIds(range.getStart(), range.getEnd()).stream().
                     mapToLong(Long::longValue)
                     .sum();
         }

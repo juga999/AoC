@@ -55,9 +55,12 @@ public class CharMatrix2D extends Matrix2D<Character> {
             charsMap.put(dir, getCharArray(radius));
         }
 
-        for (int i = 0; i < radius; i++) {
+        for (int i = 1; i <= radius; i++) {
             for (Direction dir : Direction.values()) {
-                charsMap.get(dir)[i] = charAt(r + (i * dir.getDy()), c + (i * dir.getDx()));
+                Location l = new Location(r + (i * dir.getDy()), c + (i * dir.getDx()));
+                if (isValidLocation(l)) {
+                    charsMap.get(dir)[i-1] = charAt(l);
+                }
             }
         }
 
